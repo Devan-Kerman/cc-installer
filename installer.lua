@@ -1,6 +1,15 @@
 -- read json from URL
 function decodeURL(url)
-	return decode(http.get(url).readAll())
+	if url then
+		local con = http.get(url)
+		if con then
+			return decode(con.readAll())
+		else
+			error("Unable to access: " .. url)
+		end
+	else
+		error("Invalid URL!")
+	end
 end
 
 -- base 64 parser
@@ -149,7 +158,7 @@ end
 function readGithubFile(url)
 	local returned = decodeURL(url)
 	if returned["encoding"] == "base64" then
-		return decode(dec(returned["content"]))
+		return dec(returned["content"])
 	else
 	    error(string.format("Unknown encoding: %s", returned["encoding"]))
 	end
@@ -181,7 +190,7 @@ function startInstall(username, repository, branchName)
         if v["path"] == "installer.json" then
             -- read config
             print("found config!")
-            config = readGithubFile(v["url"])
+            config = decode(readGithubFile(v["url"]))
         end
     end
 
