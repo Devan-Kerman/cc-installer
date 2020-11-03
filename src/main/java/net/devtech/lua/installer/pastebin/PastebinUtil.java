@@ -17,7 +17,6 @@ import org.apache.http.message.BasicNameValuePair;
 
 public class PastebinUtil {
 	private static final CloseableHttpClient CLIENT = HttpClients.createMinimal();
-
 	public static void createPaste(String key, String paste, String name) throws IOException {
 		HttpPost post = new HttpPost("https://pastebin.com/api/api_post.php");
 		List<NameValuePair> nvps = new ArrayList<>();
@@ -28,7 +27,7 @@ public class PastebinUtil {
 		post.setEntity(new UrlEncodedFormEntity(nvps));
 		try (CloseableHttpResponse response = CLIENT.execute(post)) {
 			String resp = IOUtil.readAll(response.getEntity().getContent());
-			if(resp.startsWith("Bad API Request")) {
+			if(resp.startsWith("Bad API request")) {
 				System.out.println("There was a problem reaching pastebin: " + resp);
 			} else {
 				System.out.println("Pastebin link: " + resp);
